@@ -30,6 +30,9 @@ except (ImportError, ModuleNotFoundError):
     recipe = None
 
 
+def is_load_rank():
+    return mpu.get_tensor_model_parallel_rank() == 0
+
 def update_rotary_pos_emb(seq_length):
     args = get_args()
     rotary_dim = args.hidden_size // args.num_attention_heads \

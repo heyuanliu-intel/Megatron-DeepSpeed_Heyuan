@@ -22,7 +22,7 @@ from megatron.checkpointing import load_args_from_checkpoint
 from megatron.global_vars import set_global_variables, set_args
 from megatron.model.transformer import bias_dropout_add_fused_train
 from megatron.model.fused_bias_gelu import bias_gelu
-from megatron.utils import is_rank_0
+from megatron.utils import is_rank_0, is_load_rank
 from deepspeed.accelerator import get_accelerator
 import deepspeed
 from deepspeed.ops.op_builder.builder import OpBuilder
@@ -128,7 +128,7 @@ def _compile_dependencies():
     # Compile dataset C++ code.
     # =========================
     # TODO: move this to ninja
-    if is_rank_0():
+    if is_load_rank():
         start_time = time.time()
         print('> compiling dataset index builder ...')
         from megatron.data.dataset_utils import compile_helper

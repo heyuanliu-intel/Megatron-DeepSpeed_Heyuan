@@ -206,7 +206,7 @@ if [[ -n "$GRAD_ACCUM_DTYPE" ]]; then
   }"
 fi
 
-DS_CONFIG=${OUTPUT_DIR}/ds_config.json
+DS_CONFIG=${OUTPUT_DIR_PREFIX}/ds_config.json
 cat << EOT > $DS_CONFIG
 {
   "train_batch_size" : $GLOBAL_BATCH,
@@ -236,7 +236,7 @@ EOT
 # configure multi-node
 MULTINODE_CMD=""
 if [ "$NUM_NODES" -ne "1" -a -f "$HOSTSFILE" ]; then
-    MULTINODE_CMD="--hostfile=$HOSTSFILE \
+    MULTINODE_CMD="--hostfile=$HOSTSFILE --master_port 60008 \
                    --master_addr $(head -n 1 $HOSTSFILE | sed -n s/[[:space:]]slots.*//p) "
 fi
 
@@ -428,10 +428,12 @@ if [ ! -z "$QNPU_DIR" ]; then
     echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> $HOME/.deepspeed_env
 fi
 
+bash setup.sh
+
 # run!
 deepspeed --num_nodes ${NUM_NODES} \
           --num_gpus ${DEVICES_PER_NODE} \
           --no_local_rank \
           --no_python \
           $MULTINODE_CMD \
-          /usr/bin/bash -c "$CMD" #2>&1 | tee ${OUTPUT_DIR}/log_${RUNTIME}.txt
+          /usr/bin/bash -c "$CMD" 2>&1 | tee ${OUTPUT_DIR}/log_${RUNTIME}.txt
