@@ -428,7 +428,9 @@ if [ ! -z "$QNPU_DIR" ]; then
     echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> $HOME/.deepspeed_env
 fi
 
-bash setup.sh
+if [ $NUM_NODES -gt 1 ]; then
+    bash scripts/setup.sh
+fi
 
 # run!
 deepspeed --num_nodes ${NUM_NODES} \
