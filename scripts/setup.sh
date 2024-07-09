@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROOT_DIR="$HOME/Megatron-DeepSpeed_Heyuan"
+ROOT_DIR="$HOME/Megatron-DeepSpeed"
 SSH_PORT=60005
 CONFIG="$HOME/.ssh/config"
 DS_ENV="$HOME/.deepspeed_env"
